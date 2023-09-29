@@ -68,3 +68,51 @@ for files in glob('path/*.mp3'):
 for files in glob('path/*.flac'): 
   do something else
 ```
+
+# How can we generate random file names?
+Credit [here on stackoverflow](). We can use either of the following solutions:
+
+Using the [UUID module](http://docs.python.org/library/uuid.html) module for generating a random string:
+```
+import uuid
+filename = str(uuid.uuid4())
+```
+
+Using `tempfile` module:
+Python has facilities to generate temporary file names, see [tempfile](http://docs.python.org/library/tempfile.html). For instance:
+```
+import tempfile
+tf = tempfile.NamedTemporaryFile()
+print(tf.name) # output: /tmp/tmptjfxgqtc
+tf = tempfile.NamedTemporaryFile()
+print(tf.name) # output: /tmp/tmp9opi3hza
+```
+
+# How do we copy files and directories?
+References: [Copy Files and Directories in Python](https://pynative.com/python-copy-files-and-directories/), [How to copy files from one folder to another using Python?](https://www.tutorialspoint.com/How-to-copy-files-from-one-folder-to-another-using-Python), [Python Copy File – Copying Files to Another Directory](https://www.freecodecamp.org/news/python-copy-file-copying-files-to-another-directory/), [copydir](https://gist.github.com/dreikanter/5650973).
+
+# How can we change permissions on files and a directory?
+References: [Setting Chmod Value with Python](https://ismailtasdelen.medium.com/setting-chmod-value-with-python-7e14daaf09b3), [https://stackoverflow.com/questions/12791997/how-do-you-do-a-simple-chmod-x-from-within-python](https://stackoverflow.com/questions/12791997/how-do-you-do-a-simple-chmod-x-from-within-python), [Working with Files and Directories in Python
+](https://www.devdungeon.com/content/working-files-and-directories-python).
+
+# How can we set permissions recursively for a directory?
+I found [here](https://www.adamsmith.haus/python/examples/4291/os-set-permissions-recursively-for-a-directory) working like a charm.
+
+Using subprocess module to call any OS command like
+```
+>>> import subprocess
+>>> subprocess.call(['chmod', '-R', '+w', 'biomodels-jummp'])
+```
+
+If you want to use the os module, you'll have to recursively write it:
+```
+import os
+def change_permissions_recursive(path, mode):
+    for root, dirs, files in os.walk(path, topdown=False):
+        for dir in [os.path.join(root,d) for d in dirs]:
+            os.chmod(dir, mode)
+    for file in [os.path.join(root, f) for f in files]:
+            os.chmod(file, mode)
+change_permissions_recursive('my_folder', 0o777)
+```
+
