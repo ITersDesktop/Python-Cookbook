@@ -35,3 +35,11 @@ date_after_month = datetime.now() + relativedelta(day=1)
 print('After a day:', date_after_month.strftime(dt_format))
 ```
 Remember: install the required package `pip install python-dateutil` for this method.
+
+# How to extract the year from a Python datetime object?
+It's straighforward.
+```
+import datetime
+year = datetime.date.today().year
+year = datetime.datetime.today().year
+year = datetime.date.today().year
