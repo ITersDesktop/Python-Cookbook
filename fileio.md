@@ -151,3 +151,42 @@ from pathlib import Path
 Path("path/to/current/file.foo").rename("path/to/new/destination/for/file.foo")
 ```
 More reading: [pathlib.Path.rename](https://docs.python.org/3.4/library/pathlib.html#pathlib.Path.rename)
+
+# How to list all files of a directory?
+All methods presented below are copied from [this thread](https://stackoverflow.com/questions/3207219/how-do-i-list-all-files-of-a-directory).
+
+## Method 1: Using `os.listdir`
+`os.listdir()` returns everything inside a directory, including both **files** and **directories**. Using `os.path`'s `isfile()`, we can filter only list files.
+```
+from os import listdir
+from os.path import isfile, join
+onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
+```
+
+## Method 2: Using `os.walk`
+A one-line solution to get **only list of files** (no subdirectories):
+```
+from os import walk
+
+f = []
+for (dirpath, dirnames, filenames) in walk(mypath):
+    f.extend(filenames)
+    break
+
+filenames = next(walk(path))[2]
+filenames = next(walk(mypath), (None, None, []))[2]  # [] if no file
+
+```
+or absolute pathnames:
+```
+paths = [os.path.join(path, fn) for fn in next(walk(path))[2]]
+```
+
+## Method 3: Using `glob`
+```
+from glob import glob
+# All files and directories ending with .txt and that don't begin with a dot:
+print(glob("/home/adam/*.txt")) 
+# All files and directories ending with .txt with depth of 2 folders, ignoring names beginning with a dot:
+print(glob("/home/adam/*/*.txt")) 
+```
