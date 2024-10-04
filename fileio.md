@@ -93,7 +93,7 @@ References: [Copy Files and Directories in Python](https://pynative.com/python-c
 
 # How can we change permissions on files and a directory?
 References: [Setting Chmod Value with Python](https://ismailtasdelen.medium.com/setting-chmod-value-with-python-7e14daaf09b3), [https://stackoverflow.com/questions/12791997/how-do-you-do-a-simple-chmod-x-from-within-python](https://stackoverflow.com/questions/12791997/how-do-you-do-a-simple-chmod-x-from-within-python), [Working with Files and Directories in Python
-](https://www.devdungeon.com/content/working-files-and-directories-python).
+](https://www.devdungeon.com/content/working-files-and-directories-python)
 
 # How can we set permissions recursively for a directory?
 I found [here](https://www.adamsmith.haus/python/examples/4291/os-set-permissions-recursively-for-a-directory) working like a charm.
@@ -116,3 +116,38 @@ def change_permissions_recursive(path, mode):
 change_permissions_recursive('my_folder', 0o777)
 ```
 
+# How to move files
+The whole receipt is copied from [this thread](https://stackoverflow.com/questions/8858008/how-do-i-move-a-file-in-python).
+## Method 1: Using either `os.rename()`, `os.replace()`, or `shutil.move()` with the same syntax.
+```
+import os
+import shutil
+
+os.rename("path/to/current/file.foo", "path/to/new/destination/for/file.foo")
+os.replace("path/to/current/file.foo", "path/to/new/destination/for/file.foo")
+shutil.move("path/to/current/file.foo", "path/to/new/destination/for/file.foo")
+```
+Remember: 
+* The filename (`"file.foo"`) must be included in both the source and destination arguments. If it differs between the two, the file will be renamed as well as moved.
+* The directory within which the new file is being created must already exist.
+* On Windows, a file with that name must not exist or an exception will be raised, but `os.replace()` will silently replace a file even in that occurrence.
+* `shutil.move` simply calls `os.rename` in most cases. However, if the destination is on a different disk than the source, it will instead copy and then delete the source file.
+
+Source: [here](https://stackoverflow.com/a/8858026)
+
+## Method 2: Using `os.system` to call `mv` command in Linux
+If you don't care about the returned value, you can do
+```
+import os
+os.system("mv src/* dest/") 
+```
+
+## Method 3: Using `pathlib` of class `Path` after Python 3.4
+After Python 3.4, you can also use `pathlib`'s class `Path` to move file.
+
+```
+from pathlib import Path
+
+Path("path/to/current/file.foo").rename("path/to/new/destination/for/file.foo")
+```
+More reading: [pathlib.Path.rename](https://docs.python.org/3.4/library/pathlib.html#pathlib.Path.rename)
