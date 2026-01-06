@@ -1,0 +1,12 @@
+pyobjus
+plyer
+imdbpy
+pandas
+rich
+tabulate
+tqdm
+alive-progress
+progressbar2
+pillow
+pyqrcode
+pypng
